@@ -1,11 +1,42 @@
 var express = require('express');
 var app = express();
-var path = require("path");
-var dir = path.join(__dirname, '/../front_end/');
-console.log("Angular directory is: " + dir);
-app.use(express.static(dir));
-app.all('*', function (req, res) {
-    console.log("Requst: ", req);
-    res.sendFile(path.join(dir, 'index.html'));
+var bodyParser = require('body-parser');
+var Auth = require("./utils/auth");
+
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
+// parse application/json
+app.use(bodyParser.json());
+
+//auth checker
+app.post("/api/*", function(req, res, next){
+    console.log("Api call", req.body);
+    if(req.body && req.body.api_key){
+        Auth.check(req.body.api_key)
+            .then(function(){
+                next();
+            })
+            .catch(function(){
+                next();
+            });
+    }else{
+        next();
+    }
+});
+
+//register api calls.
+app.post("/api/getContests", require("./express/api/getContests"));
+
+
+//register angular server
+var angularServer = require("./express/angular-server");
+angularServer(app);
+
+//catch errors
+app.use(function(err, req, res, next){
+    console.log("There was an error", err);
+    res.status(500).send({error: true, details: err});
 });
 app.listen(8080);
