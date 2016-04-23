@@ -1,0 +1,15 @@
+{
+  "name": "safe-random-back-end",
+  "version": "1.0.0",
+  "description": "Nodejs related code.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.4",
+    "node-mysql": "^0.4.2"
+  }
+}
