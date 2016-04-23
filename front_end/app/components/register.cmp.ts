@@ -23,8 +23,55 @@ import {HeaderCmp} from './srheader.cmp';
                    <h2>Create your account</h2>
                    <div class="state"></div>
                    <div class="line"></div>
+                   <div class="plans">
+                     <div class="plan basic">
+                       <h2>Basic Plan</h2>
+                       <div class="clickbutton green" (click)="showPaymentView('Basic Plan', 20)">SELECT PLAN</div>
+                     </div>
+                     <div class="plan ultimate">
+                       <h2>Ultimate Plan</h2>
+                       <div class="clickbutton green" (click)="showPaymentView('Ultimate Plan', 50)">SELECT PLAN</div>
+                     </div>
+                     <div style="clear:both"></div>
+                   </div>
                  </div>
                </template>
+               <template [ngSwitchWhen]="3">
+                 <sr-header-cmp></sr-header-cmp>
+                 <div class="view3" style="padding: 1em;">
+                   <h2>Create your account</h2>
+                   <div class="state position2"></div>
+                   <div class="line"></div>
+                   <div style="width:100%; text-align:center;">
+                     <br/>
+                     <h2>You will buy: {{selectedPlan}}</h2><br/>
+                     <div class="paymentform">
+                       <h3>Amount</h3>
+                       <input value="\${{selectedPrice}}" disabled>
+                       <h3>Credit card number</h3>
+                       <input value="">
+                       <h3>Name on card</h3>
+                       <input value="">
+                       <h3>Exp Date</h3>
+                       <input value="">
+                       <h3>CVV/CVV2</h3>
+                       <input value="">
+                       <br/>   
+                       <div class="clickbutton green" (click)="showFinalizeView($event)">Pay {{selectedPrice}}</div>
+                    
+                     </div>
+                   </div>
+                 </div>
+               </template>
+               <template [ngSwitchWhen]="4">
+                  <sr-header-cmp></sr-header-cmp>
+                   <div class="view4" style="padding: 1em;">
+                     <h2>Create your account</h2>
+                     <div class="state position3"></div>
+                     <div class="line"></div>
+                  </div>
+               </template>
+               <div class="footer" style="width:100%; position: absolute; bottom: 0;background-color:#cacaca; padding: 1.2em 0em; color: #949494;text-align:center;">Powered by BigDataNauts</div>
              </div>`,
   directives: [HeaderCmp],
   host: {
@@ -35,6 +82,8 @@ import {HeaderCmp} from './srheader.cmp';
 export class RegisterCmp implements OnInit {
   private showRegisterPopup: boolean = true;
   private mViewState: number = 1;
+  private selectedPlan: string;
+  private selectedPrice: number;
 
   constructor(private mRouter: Router) {
 
@@ -61,6 +110,16 @@ export class RegisterCmp implements OnInit {
 
   private showView(viewName: string, parameters?: Object) {
     this.mRouter.navigate([viewName, parameters]);
+  }
+
+  private showPaymentView(selectedPlan: string, selectedPrice: number):void{
+    this.selectedPlan = selectedPlan;
+    this.selectedPrice = selectedPrice;
+    this.mViewState = 3;
+  }
+
+  private showFinalizeView(){
+    this.mViewState = 4;
   }
 
   private showSignup(): void {

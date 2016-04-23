@@ -1,7 +1,8 @@
 .register-cmp .wrapper{
 	display: table;
 	margin-left: 50%;
-	margin-top: 50%;
+	position: absolute;
+	top: 50%;
 	transform: translateX(-50%) translateY(-50%);
 	-moz-transform: translateX(-50%) translateY(-50%);
 	-webkit-transform: translateX(-50%) translateY(-50%);
@@ -31,9 +32,6 @@
 	font-size: 1.1em;
 }
 
-.register-cmp .view2 h2{
-	color: #162748;
-}
 
 .state{
 	background-image: url(/assets/img/state_sprite.png);
@@ -41,6 +39,10 @@
 	background-size: auto 170px;
 	height: 57px;
 	width: 100%;
+}
+
+.register-cmp .plan h2{
+	color: #FFF;
 }
 
 .state.position2{
@@ -55,6 +57,58 @@
 	background-color: #162748;
 	height: 1px;
 	width: 100%;
+}
+
+.plans{
+	text-align: center;
+	padding-top: 2em; 
+}
+
+.plan{	
+	background-color: #162748;
+	border-radius: 1em;
+	-webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+	display: inline-block;
+	height: 250px;
+	width: 220px;
+	text-align: center;
+	padding: 1em;
+	margin-right: 1em;
+	margin-bottom: 1em;
+	position: relative;
+}
+
+.plan .clickbutton{
+	padding: 0.7em 0em;
+	bottom: 0em;
+	position: absolute;
+	left: 0;
+	right: 0;
+	box-sizing: content-box;
+	margin: 1em;
+}
+
+.paymentform{
+	display: inline-block;
+	text-align: left;
+}
+
+.paymentform .clickbutton{
+	width: 100%;
+	padding: 0.6em 0em;
+	margin-top: 1em;
+}
+
+
+h3{
+	color: #162647;
+	margin: 0.5em 0em 0em 0em;
+}
+
+input{
+	border: 2px solid #162647;
+	min-width: 13em;
 }
 
 @media only screen 
