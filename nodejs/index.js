@@ -3,6 +3,10 @@ var app = express();
 var bodyParser = require('body-parser');
 var Auth = require("./utils/auth");
 
+
+var cors = require('cors');
+app.use(cors());
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
