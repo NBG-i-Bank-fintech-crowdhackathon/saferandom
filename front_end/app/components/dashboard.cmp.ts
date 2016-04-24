@@ -229,10 +229,13 @@ export class DashboardCmp implements OnInit, AfterViewInit {
 
     if( participantsText ){
       //create the participants array
-      let participantsArray: Array<Object> = new Array<Object>();
+      let participantsArray: Array<Object> = new Array<Object>(),
+          participantsPerLine = participantsText.split("\n");
 
-      //participantsArray = JSON.parse(JSON.stringify(`[${participantsText}]`));
-      participantsArray = JSON.parse(`[${participantsText}]`);
+      participantsArray = participantsPerLine.map((partTxt) => {
+        var pSplit = partTxt.split(",");
+        return {id:pSplit[0], title:pSplit[1]};
+      });
 
       console.log(participantsArray);
 
