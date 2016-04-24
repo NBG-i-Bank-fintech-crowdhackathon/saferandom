@@ -29,6 +29,9 @@ module.exports = function(req, res, next){
                 return next(err);
             }
             console.log('The rows: ', rows);
+            rows.forEach(function(contest){
+                contest.endtime = contest.endtime.getTime();
+            });
             res.send(rows);
             connection.release();
         });

@@ -26,6 +26,7 @@ module.exports = function(req, res, next){
                 return;
             }
             var contest = rows[0];
+            contest.endtime = contest.endtime.getTime();
             connection.query("Select * From `participation` Where `contest_id` = ?", [contestID], function(err, rows){
                 if (err) {
                     connection.release();

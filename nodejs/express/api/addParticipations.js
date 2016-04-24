@@ -53,6 +53,7 @@ module.exports = function(req, res, next){
  * @param msg
  */
 function getSha256HEX(msg){
+    msg = msg.toString();
     var hash = crypto.createHash('sha256')
         .update(msg)
         .digest('hex');
@@ -67,7 +68,7 @@ function insertParticipations(forContestId, partisipations, connection, complete
         var params = [forContestId, pData.id, pData.title, getSha256HEX(pData.id), forContestId, Auth.user.id];
         console.log("Pdata:", pData, params);
         connection.query("Insert Ignore `participation`(`contest_id`, `identifier`, `title`, `seed`)" +
-            " Select ?, ?, ?, ? From `contest` Where `id` = ? And `organizer_id` = ?", params, function(error, result){
+            " Select ?, ?, ?, ? From `contest` Where `id` = ? And `organizer_id` = ? And `endtime` > Now() And `status` = 0", params, function(error, result){
             if(error){
                 console.log(error);
                 completedFN(false);
