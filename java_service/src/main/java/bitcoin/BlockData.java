@@ -17,6 +17,11 @@ public class BlockData {
 		
 	}
 	
+	public BlockData(int height, String blockHash, Timestamp blockDate, String seed) {
+		this(height, blockHash, blockDate);
+		this.seed = seed;
+	}
+	
 	public BlockData(String blockHash, Timestamp blockDate) {
 		super();
 		this.blockHash = blockHash;
@@ -42,6 +47,12 @@ public class BlockData {
 
 	public String getSeed() {
 		return seed;
+	}
+
+	@Override
+	public String toString() {
+		return "BlockData [height=" + height + ", blockHash=" + blockHash
+				+ ", blockDate=" + blockDate + ", seed=" + seed + "]";
 	}
 	
 }

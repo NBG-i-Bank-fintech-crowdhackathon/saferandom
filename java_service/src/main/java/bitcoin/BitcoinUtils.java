@@ -58,6 +58,7 @@ public class BitcoinUtils {
 			header = peer.getBlock(header.getPrevBlockHash()).get();
 			System.out.println("Found " + newBlocks.size());
 		}
+		kit.stop();
 		if (newBlocks.isEmpty()) return null;
 		
 		//we should add counter in reverse order
