@@ -289,7 +289,7 @@ export class DashboardCmp implements OnInit, AfterViewInit {
           if(!result.error){
               this.closeEditPopup();
 
-              let contestsObs: Observable<Conte st[]> = this.mReqService.getContests();
+              let contestsObs: Observable<Contest[]> = this.mReqService.getContests();
               contestsObs.subscribe((contests: Contest[]) => {
                //  console.log(contests);
                   this.contestsArray = contests;

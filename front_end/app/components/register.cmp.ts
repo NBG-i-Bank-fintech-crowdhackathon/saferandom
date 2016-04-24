@@ -15,6 +15,9 @@ import {HeaderCmp} from './srheader.cmp';
                      <input type="text" name="password" placeholder="Enter a password"/><br/>
                      <div class="clickbutton green" (click)="showSignup($event)">Register</div>
                    </form>
+                   <br/>
+                   <div style="text-align:center">Already have an account? <span style="cursor:pointer; font-weight: bold" (click)="showDashboard($event)">Login</span>
+                   </div>
                  </div>
                </template>
                <template [ngSwitchWhen]="2">
@@ -119,6 +122,10 @@ export class RegisterCmp implements OnInit {
 
   private createAContest(): void {
     this.showView("Dashboard");
-    
+  }
+
+  private showDashboard():void{
+    this.showView("Dashboard");
+  
   }
 }
