@@ -42,7 +42,7 @@ import {Subject, BehaviorSubject, Observable} from "rxjs/Rx";
                                </div>
                                <div class="row" [ngClass]="{ win: participant.myorder == 1}" *ngFor="#participant of contest.contestResultsArray">
                                  <div class="cell" *ngIf="contest.state == 2">{{participant.myorder}}</div>
-                                 <div class="cell">{{participant.id}}</div>
+                                 <div class="cell">{{participant.identifier}}</div>
                                  <div class="cell">
                                    {{participant.title}}
                                    <span *ngIf="participant.myorder == 1"> - WINNER!</span>
@@ -143,9 +143,9 @@ export class SearchCmp implements OnInit, AfterViewInit {
           return a.myorder - b.myorder;
         });
 
-        results = results.filter( (participant: Object) => {
-          return participant.myorder > 0;
-        });
+        //results = results.filter( (participant: Object) => {
+        //  return participant.myorder > 0;
+        //});
 
         contest.contestResultsArray = results;
       });

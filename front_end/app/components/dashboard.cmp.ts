@@ -57,7 +57,7 @@ import {Subject, BehaviorSubject, Observable} from "rxjs/Rx";
                         </h3>
                         <div *ngIf="contestForEdit.participantsArray">
                           <div class="participant" *ngFor="#participant of contestForEdit.participantsArray">
-                            <span>id: {{participant.id}}, name: {{participant.title}}</span>
+                            <span>id: {{participant.identifier}}, name: {{participant.title}}</span>
                           </div>
                         </div>   
                         <br/>
