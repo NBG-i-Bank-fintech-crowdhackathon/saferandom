@@ -17,10 +17,10 @@ export class Contest{
 				public title:string,
 				public state: number,
 				public type: number,
-				public date: string,
+				public date: number,
 				public prize: string,
 				public participantsArray: Array<Object>){
-
+		console.log(this);
 	}
 
 	public getMethodTitle(): string{
@@ -47,6 +47,13 @@ export class Contest{
 	}
 
 	public getDate(): string{
-		return new Date(this.date);
+		let date = new Date(this.date),
+			dateStr = `${this.pad(date.getHours())}:${this.pad(date.getMinutes())} ${this.pad(date.getDate())}/${this.pad(date.getMonth()+1)}/${date.getFullYear()}`;
+		console.log(date, dateStr);
+		return dateStr;
+	}
+
+	private pad(num:number){
+		return `00${num}`.slice(-2);
 	}
 }
