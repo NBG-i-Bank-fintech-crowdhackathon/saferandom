@@ -5,6 +5,7 @@
 .sr-header-cmp .logo{
 	width: 10em;
 	padding: 1.5em 1.5em 0em 1.5em;
+	cursor: pointer;
 }
 
 .sr-header-cmp span{

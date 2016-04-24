@@ -41,7 +41,7 @@ export class RequestsService {
 				map(this.extractData).
 				map((jsonArray: Array<Object>) => {
 					return jsonArray.map((data: Object) => {
-						return new Contest(data.id, data.title, data.state, data.type, data.endtime, data.details);
+						return new Contest(data.id, data.title, data.state, data.type, data.endtime, data.details, data.participations, data.winner, data.wintoken);
 					});
 				})
 				.catch(this.handleError);
@@ -60,8 +60,8 @@ export class RequestsService {
 				post(RequestsService.ip + "/api/getContestDetails", body, options).
 				map(this.extractData).
 				map((data: Object) => {
-					return new Contest(data.id, data.title, data.state, data.type, data.endtime, data.details, data.participations);
-				})
+				return new Contest(data.id, data.title, data.state, data.type, data.endtime, data.details, data.participations, data.winner, data.wintoken);
+			})
 				.catch(this.handleError);
 	}
 

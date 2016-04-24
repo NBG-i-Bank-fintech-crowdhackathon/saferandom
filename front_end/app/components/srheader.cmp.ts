@@ -6,9 +6,8 @@ import {Router} from 'angular2/router';
 @Component({
   selector: 'sr-header-cmp',
   template: `<div>
-                <img class="logo" src="/assets/img/logo.png"/><br/>
+                <img (click)="showHomeView($event)" class="logo" src="/assets/img/logo.png"/><br/>
                 <span>The world’s first public verifiable random engine</span>
-
             </div>`,
   host: {
 	   class: 'sr-header-cmp'
@@ -40,6 +39,10 @@ export class HeaderCmp implements OnInit {
       //console.log(`${scrollpos}`);
     });
 
+  }
+
+  private showHomeView():void{
+    this.showView("Home");
   }
 
   private showView(viewName: string, parameters?: Object) {

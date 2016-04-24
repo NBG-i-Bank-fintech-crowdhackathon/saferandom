@@ -69,11 +69,12 @@ export class HomeCmp implements OnInit{
         this.mRouter.navigate([ viewName, parameters]);
     }
 
-    private searchForContest():void{
+    private searchForContest(): void {
+      this.showView("Search");
     }
 
     private organizeContest(): void {
-		this.showView("Register");
+		  this.showView("Register");
 
     }
 }

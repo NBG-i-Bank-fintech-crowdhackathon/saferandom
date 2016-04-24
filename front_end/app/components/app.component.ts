@@ -7,6 +7,7 @@ import {Type} from "angular2/core";
 import {HomeCmp} from './home.cmp';
 import {RegisterCmp} from './register.cmp';
 import {DashboardCmp} from './dashboard.cmp';
+import {SearchCmp} from './searchforcontest.cmp';
 
 @Component({
     selector: 'sr-app',
@@ -21,6 +22,7 @@ import {DashboardCmp} from './dashboard.cmp';
     { path: "/home", name: "Home", component: <Type>HomeCmp, useAsDefault: true },
     { path: "/register", name: "Register", component: <Type>RegisterCmp },
     { path: "/dashboard", name: "Dashboard", component: <Type>DashboardCmp},
+    { path: "/search", name: "Search", component: <Type>SearchCmp},
     { path: "/**", redirectTo: ['/Home']}
 ])
 export class AppComponent implements OnInit{ 

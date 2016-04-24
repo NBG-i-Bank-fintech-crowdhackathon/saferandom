@@ -19,7 +19,9 @@ export class Contest{
 				public type: number,
 				public date: string,
 				public prize: string,
-				public participantsArray: Array<Object>){
+				public participantsArray: Array<Object>,
+				public winner: number,
+				public wintoken: string){
 
 	}
 
@@ -37,13 +39,21 @@ export class Contest{
 	public getStateTitle(): string {
 		try {
 			return Contest.contstates.filter((state: Object) => {
-				if (state.id == this.id)
+				if (state.id == this.state)
 					return state;
 			})[0].title;
 		}catch(error){
-			return "Demo";
+			return "Completed";
 		}
 
+	}
+
+	public getWinnerName():string{
+		if( this.state >= 2 ){
+			return this.participantsArray.filter( (participant: Object) =>{
+				return participant.id == this.winner;
+			} )[0];
+		}
 	}
 
 	public getDate(): string{
