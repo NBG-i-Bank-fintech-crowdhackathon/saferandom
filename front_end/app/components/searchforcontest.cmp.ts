@@ -30,18 +30,18 @@ import {Subject, BehaviorSubject, Observable} from "rxjs/Rx";
                              </div>
                              <h3>Contest date: </h3>{{contest.getDate()}}
                              <br/>
-                             <div style="padding: 0.5em 0em; margin-top: 1em; width: 100%;" class="clickbutton green" (click)="showContestResults(contest.id)">
+                             <div style="padding: 0.5em 0em; margin-top: 1em; width: 100%;" class="clickbutton green" (click)="showContestResults(contest)">
                                Show Results
                              </div>
                              <br/>
-                             <div class="table" style="margin-top: 1em;" *ngIf="contestResultsArray.length > 0">
+                             <div class="table" style="margin-top: 1em;" *ngIf="contest.contestResultsArray.length > 0">
                                <div class="row">
-                                 <div class="cell">Order</div>
+                                 <div class="cell" *ngIf="contest.state == 2">Order</div>
                                  <div class="cell">Id</div>
                                  <div class="cell">Name</div>
                                </div>
-                               <div class="row" [ngClass]="{ win: participant.myorder == 1}" *ngFor="#participant of contestResultsArray">
-                                 <div class="cell">{{participant.myorder}}</div>
+                               <div class="row" [ngClass]="{ win: participant.myorder == 1}" *ngFor="#participant of contest.contestResultsArray">
+                                 <div class="cell" *ngIf="contest.state == 2">{{participant.myorder}}</div>
                                  <div class="cell">{{participant.id}}</div>
                                  <div class="cell">
                                    {{participant.title}}
@@ -78,7 +78,7 @@ export class SearchCmp implements OnInit, AfterViewInit {
   private showParticipantsTextArea: boolean = false;
   private participantsText: string;
 
-  private contestResultsArray: Array<Object>;
+  //private contestResultsArray: Array<Object>;
 
   constructor(private mRouter: Router,
     private ref: ChangeDetectorRef,
@@ -108,7 +108,7 @@ export class SearchCmp implements OnInit, AfterViewInit {
     this.inputObservable
       .map((element: any) => { return element.target.value }) //map the input value
       .filter((text: string) => { return text.length >= 0 }) //search only for values more than 1 characters
-      .do(() => { this.contestResultsArray = new Array<Object>() } )
+      //.do(() => { this.contestResultsArray = new Array<Object>() } )
       .switchMap((text: string) => this.mReqService.getContests(text)) //the actual search
       .subscribe(
       (response) => { this.showSearchResults(response) }, //success
@@ -131,11 +131,11 @@ export class SearchCmp implements OnInit, AfterViewInit {
     */
   }
 
-  public showContestResults(id:number):void{
+  public showContestResults(contest:Contest):void{
 
     this
     .mReqService
-    .getContestDetails(id)
+    .getContestDetails(contest.id)
     .subscribe((resultcontest: Contest) => {
         let results: Array<Object> = resultcontest.participantsArray;
 
@@ -147,7 +147,7 @@ export class SearchCmp implements OnInit, AfterViewInit {
           return participant.myorder > 0;
         });
 
-        this.contestResultsArray = results;
+        contest.contestResultsArray = results;
       });
 
   }

@@ -12,6 +12,7 @@ export class Contest{
 						  { id: 2, title: "Completed" },
 						  { id: 3, title: "Cancelled" }];
 
+	public contestResultsArray: Array<Object>;
 
 	constructor(public id: number,
 				public title:string,
@@ -22,7 +23,7 @@ export class Contest{
 				public participantsArray: Array<Object>,
 				public winner: number,
 				public wintoken: string){
-
+		this.contestResultsArray = new Array<Object>();
 	}
 
 	public getMethodTitle(): string{
