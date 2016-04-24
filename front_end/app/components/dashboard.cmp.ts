@@ -1,5 +1,5 @@
 /// <reference path="../shared/ts.definitions/jquery.d.ts"/>
-import {Component, AfterViewInit, OnInit} from 'angular2/core';
+import {Component,ChangeDetectorRef, AfterViewInit, OnInit} from 'angular2/core';
 import {Router} from 'angular2/router';
 import {HeaderCmp} from './srheader.cmp';
 import {Contest} from '../shared/models/Contest';
@@ -8,41 +8,71 @@ import {Subject, BehaviorSubject, Observable} from "rxjs/Rx";
 
 @Component({
   selector: 'sr-dashboard-cmp',
-  template: `<div [ngSwitch]="mViewState">
-               <template [ngSwitchWhen]="1">
-                   <sr-header-cmp></sr-header-cmp>
-                   <div class="view2" style="padding: 1em;">
-                     <h2>Dashboard</h2>
-                     <div class="line"></div>
-                     <div class="outerwrapper">
-                       <div class="wrapper">
-                         <div class="searchbarwrapper">
-                           <input id="contestsearchinput" type="text" placeholder="Search for a contest"/>
-                         </div>
-                         <div class="contestslist">
-                           <div *ngIf="contestsArray.length>0">
-                             <div class="contesttab" *ngFor="#contest of contestsArray">
-                               <h2>#{{contest.id}} - {{contest.title}}</h2>
-                               <h3>State: </h3>{{contest.getStateTitle()}}
-                               <br/>
-                               <h3>Method: </h3>{{contest.getMethodTitle()}}
-                               <br/>
-                               <h3>Contest date: </h3>{{contest.date}}
-                             </div>
-                            </div>
-                            <div *ngIf="contestsArray.length==0">
-                              <h2 class="nocontestsmsg">You don't have any contests yet</h2>
-                            </div>
-                         </div>
+  template: `<sr-header-cmp></sr-header-cmp>
+              <div class="view2" style="padding: 1em;">
+                 <h2>Dashboard</h2>
+                 <div class="line"></div>
+              <div [ngSwitch]="mViewState">
+                <template [ngSwitchWhen]="1">
+                   <div class="outerwrapper">
+                     <div class="wrapper">
+                       <div class="searchbarwrapper">
+                         <input id="contestsearchinput" type="text" placeholder="Search for a contest"/>
                        </div>
-                       <div class="controls">
-                         <div class="circlecontrol edit"></div>
-                         <div class="circlecontrol">+</div>
+                       <div class="contestslist">
+                         <div *ngIf="contestsArray.length>0">
+                           <div class="contesttab" (click)="editContest(contest)" *ngFor="#contest of contestsArray">
+                             <h2>#{{contest.id}} - {{contest.title}}</h2>
+                             <h3>State: </h3>{{contest.getStateTitle()}}
+                             <br/>
+                             <h3>Method: </h3>{{contest.getMethodTitle()}}
+                             <br/>
+                             <h3>Contest date: </h3>{{contest.date}}
+                           </div>
+                          </div>
+                          <div *ngIf="contestsArray.length==0">
+                            <h2 class="nocontestsmsg">You don't have any contests yet</h2>
+                          </div>
                        </div>
                      </div>
-                 </div>
+                     <div class="controls">
+                       <!--<div class="circlecontrol edit"></div>-->
+                       <div class="circlecontrol">+</div>
+                     </div>
+                   </div>
                </template>
-               <div class="footer" style="width:100%; position: absolute; bottom: 0;background-color:#cacaca; padding: 1.2em 0em; color: #949494;text-align:center;">Powered by BigDataNauts</div>
+               <template [ngSwitchWhen]="2">
+                   <div class="outerwrapper">
+                     <div class="editcontestwrapper">
+                       <h2>#{{contestForEdit.id}} - {{contestForEdit.title}}</h2>
+                        <h3>State: </h3>{{contestForEdit.getStateTitle()}}
+                        <br/>
+                        <h3>Method: </h3>{{contestForEdit.getMethodTitle()}}
+                        <br/>
+                        <h3>Contest date: </h3>{{contestForEdit.date}}
+                        <div class="line"></div><br/>
+                        <h3>Participants:
+                          <span *ngIf="!contestForEdit.participantsArray">There are no participants yet</span>
+                        </h3>
+                        <div *ngIf="contestForEdit.participantsArray">
+                          <div class="participant" *ngFor="#participant of contestForEdit.participantsArray">
+                            <span>id: {{participant.id}}, name: {{participant.title}}</span>
+                          </div>
+                        </div>   
+                        <br/>
+                        <div (click)="showParticipantsPopup(contestForEdit)" class="clickbutton green" style="padding: 0.5em 2em">Add Participants</div>                  
+                        <textarea id="participantsTextArea" style="width: 100%; min-height:15em; margin-top: 0.5em;" *ngIf="showParticipantsTextArea">{{participantsText}}</textarea>
+                        <br/><br/>
+                        <div class="line"></div>
+                        <br/>
+                        <div style="width: 100%; text-align: right">
+                          <div class="editbtns clickbutton green" (click)="saveChanges(contestForEdit)">SAVE</div>
+                          <div class="editbtns clickbutton green">CANCEL</div>
+                        </div>
+                     </div>
+                   </div>
+               </template>
+               <div class="footer" style="width:100%; position:fixed; bottom: 0;background-color:#cacaca; padding: 1.2em 0em; color: #949494;text-align:center;">Powered by BigDataNauts</div>
              </div>`,
   directives: [HeaderCmp],
   host: {
@@ -57,8 +87,12 @@ export class DashboardCmp implements OnInit, AfterViewInit {
   private selectedPrice: number;
   private contestsArray: Array<Contest> = new Array<Contest>();
   private inputObservable: BehaviorSubject<Contest>;
+  private contestForEdit: Contest;
+  private showParticipantsTextArea: boolean = false;
+  private participantsText: string;
 
   constructor(private mRouter: Router,
+              private ref: ChangeDetectorRef,
               private mReqService: RequestsService) {
 
   }
@@ -67,7 +101,7 @@ export class DashboardCmp implements OnInit, AfterViewInit {
 
 
     this.contestsArray = new Array<Contest>();
-    this.contestsArray.push(new Contest("1", "Contest1", 0, 1, " 24/05/2016, 14:00:00"));
+    //this.contestsArray.push(new Contest("1", "Contest1", 0, 1, " 24/05/2016, 14:00:00"));
 
   }
 
@@ -95,10 +129,13 @@ export class DashboardCmp implements OnInit, AfterViewInit {
   */
 
     //now fetch the contests
-    let contestsObs: Observable<any> = this.mReqService.getContests();
+    let contestsObs: Observable<Contest[]> = this.mReqService.getContests();
     
-    contestsObs.subscribe( (contests: any)=>{
-        console.log(contests);
+    contestsObs.subscribe((contests: Contest[]) => {
+        //  console.log(contests);
+        this.contestsArray = contests;
+
+        this.ref.detectChanges();
     } );
   }
 
@@ -109,6 +146,56 @@ export class DashboardCmp implements OnInit, AfterViewInit {
 
   private showSearchResults():void{
 
+  }
+
+  private editContest(contest: Contest): void{
+    this.contestForEdit = contest;
+    this.mViewState = 2;
+
+    this
+    .mReqService
+    .getContestDetails(contest.id)
+    .subscribe((contest: Contest) => {
+      this.contestForEdit = contest;
+      this.mViewState = 2;
+    });
+  }
+
+  private showParticipantsPopup(contest: Contest):void{
+    this.showParticipantsTextArea = true;
+
+    let participants: string = "";
+
+    if (contest.participantsArray){
+      contest.participantsArray.forEach( (participant: Object) => {
+        if(participant != "undefined")
+          participants += `{id: ${participant.id}, title: "${participant.title}"}\n`;
+      } );
+    }
+
+    console.log($("#participantsTextArea"));
+   // this.participantsText = participants;
+   // $("#participantsTextArea").val(participants);
+  }
+
+
+  private saveChanges(contest: Contest): void{
+    //take the 
+    //if(  )
+    let participantsText: string = $("#participantsTextArea").val();
+
+    if( participantsText ){
+      //create the participants array
+      let participantsArray: Array<Object> = new Array<Object>();
+
+      participantsArray = JSON.parse(JSON.stringify(`[${participantsText}]`));
+
+      console.log(participantsArray);
+
+      this.mReqService.saveContestParticipants(this.contestForEdit.id, participantsArray);
+    }
+
+    //  console.log($("#participantsTextArea").val());
   }
 
   private showView(viewName: string, parameters?: Object) {
