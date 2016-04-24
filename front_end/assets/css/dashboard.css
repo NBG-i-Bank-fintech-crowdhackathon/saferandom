@@ -3,11 +3,24 @@
 	text-align: center;
 }
 
-.outerwrapper > .wrapper{
+.outerwrapper > .wrapper,
+.outerwrapper > .editcontestwrapper{
 	display: inline-block;
 	min-width: 55%;
 	padding: 1em;
 	position: relative;
+}
+
+.editcontestwrapper{
+	background-color: #FFF;
+	box-shadow: 0px 0px 12px rgba(0,0,0,0.4);
+	-moz-box-shadow: 0px 0px 12px rgba(0,0,0,0.4);
+	-webkit-box-shadow: 0px 0px 12px rgba(0,0,0,0.4);
+    border-radius: 0.4em;	
+    text-align: left;
+    padding: 1.5em;
+    margin-top: 2em;
+    margin-bottom: 5em;
 }
 
 .searchbarwrapper > input{
@@ -44,7 +57,7 @@
 }
 
 .controls{
-	position: absolute;
+	position: fixed;
 	bottom: 2em;
 	left: -1.7em;
 }
@@ -56,13 +69,22 @@
     margin-top: 0.5em;
     padding: 1em;
     text-align: left;
+    cursor: pointer;
 }
 
 .contesttab h3{
 	display: inline-block;
 }
 
+.editbtns{
+	padding: 0.4em 2em;
+}
+
 .nocontestsmsg{
 	color: #bababa;
 	margin: 6em 0em;
+}
+
+textarea{
+	font-size: 0.9em;
 }

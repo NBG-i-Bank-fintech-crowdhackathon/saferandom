@@ -16,24 +16,33 @@ export class Contest{
 	constructor(public id: number,
 				public title:string,
 				public state: number,
-				public method: number,
+				public type: number,
 				public date: string,
-				public prize: string){
+				public prize: string,
+				public participantsArray: Array<Object>){
 
 	}
 
 	public getMethodTitle(): string{
-		return Contest.types.filter( (type: Object)=>{
-			if (type.id == this.id)
-				return type;
-		} )[0].title;
+		try {
+			return Contest.types.filter((type: Object) => {
+				if (type.id == this.type)
+					return type;
+			})[0].title;
+		}catch(error){
+			return Contest.types[0];
+		}
 	} 
 
 	public getStateTitle(): string {
-		return Contest.contstates.filter( (state: Object)=>{
-			if (state.id == this.id)
-				return state;
-		} )[0].title;
+		try {
+			return Contest.contstates.filter((state: Object) => {
+				if (state.id == this.id)
+					return state;
+			})[0].title;
+		}catch(error){
+			return "Demo";
+		}
 
 	}
 }
