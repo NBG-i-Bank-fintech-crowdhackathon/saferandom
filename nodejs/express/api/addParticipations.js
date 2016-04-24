@@ -53,8 +53,8 @@ module.exports = function(req, res, next){
  * @param msg
  */
 function getSha256HEX(msg){
-    var hash = crypto.createHmac('sha256', msg)
-        .update('I love cupcakes')
+    var hash = crypto.createHash('sha256')
+        .update(msg)
         .digest('hex');
     hash = hash.toLowerCase();
     console.log("Sha256", msg, hash);
