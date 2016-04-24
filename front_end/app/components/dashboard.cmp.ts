@@ -49,7 +49,7 @@ import {Subject, BehaviorSubject, Observable} from "rxjs/Rx";
                         <br/>
                         <h3 style="display: inline-block">Method: </h3>{{contestForEdit.getMethodTitle()}}
                         <br/>
-                        <h3 style="display: inline-block">Contest date: </h3>{{contestForEdit.date}}
+                        <h3 style="display: inline-block">Contest date: </h3>{{contestForEdit.getDate()}}
                         <br/><br/>
                         <div class="line"></div><br/>
                         <h3>Participants:
@@ -87,7 +87,9 @@ import {Subject, BehaviorSubject, Observable} from "rxjs/Rx";
                         </select>
                         <br/>
                         <br/>
-                        <h2>Contest date: <input style="font-size: 0.8em;" id="contestendtime" type="date"/></h2>
+                        <h2>Contest date: 
+                          <input style="font-size: 0.8em;" id="contestendtime" type="datetime-local"/>
+                          </h2>
                         <br/>
                         <div class="line"></div><br/>
                         <br/>
@@ -229,10 +231,13 @@ export class DashboardCmp implements OnInit, AfterViewInit {
 
     if( participantsText ){
       //create the participants array
-      let participantsArray: Array<Object> = new Array<Object>();
+      let participantsArray: Array<Object> = new Array<Object>(),
+          participantsPerLine = participantsText.split("\n");
 
-      //participantsArray = JSON.parse(JSON.stringify(`[${participantsText}]`));
-      participantsArray = JSON.parse(`[${participantsText}]`);
+      participantsArray = participantsPerLine.map((partTxt) => {
+        var pSplit = partTxt.split(",");
+        return {id:pSplit[0], title:pSplit[1]};
+      });
 
       console.log(participantsArray);
 
