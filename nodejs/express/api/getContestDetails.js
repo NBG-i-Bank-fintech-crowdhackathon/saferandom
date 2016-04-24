@@ -10,6 +10,7 @@ module.exports = function(req, res, next){
             contestID = post && post.contest_id ? parseInt(post.contest_id) : null;
         console.log("Get contest", post, contestID);
         if(contestID == null){
+            connection.release();
             next("Missing contest id");
             return;
         }
@@ -40,6 +41,7 @@ module.exports = function(req, res, next){
                     console.log('The organizer: ', rows);
                     contest.organizer = rows[0];
                     res.send(contest);
+                    connection.release();
                 });
             });
         });

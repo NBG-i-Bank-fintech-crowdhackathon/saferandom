@@ -3,6 +3,10 @@ var app = express();
 var bodyParser = require('body-parser');
 var Auth = require("./utils/auth");
 
+
+var cors = require('cors');
+app.use(cors());
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -31,6 +35,7 @@ app.post("/api/getContests", require("./express/api/getContests"));
 app.post("/api/getContestDetails", require("./express/api/getContestDetails"));
 app.post("/api/addContest", require("./express/api/addContest"));
 app.post("/api/editContest", require("./express/api/editContest"));
+app.post("/api/addParticipations", require("./express/api/addParticipations"));
 
 
 //register angular server

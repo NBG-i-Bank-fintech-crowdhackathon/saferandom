@@ -9,6 +9,7 @@ module.exports = function(req, res, next){
             searchTitle = post && post.keyword && post.keyword.trim().length ? post.keyword.trim() : null;
         console.log("Get contests", post, onlyMine, searchTitle, Auth.loggedIn);
         if (onlyMine && !Auth.loggedIn) {
+            connection.release();
             return next("Login");
         }
         var query = 'SELECT c.*, o.`name` organizer_name FROM `contest` c, `organizer` o Where c.`organizer_id` = o.`id`\n',
@@ -23,7 +24,10 @@ module.exports = function(req, res, next){
         }
         console.log(query, params);
         connection.query(query, params, function(err, rows) {
-            if (err) return next(err);
+            if (err) {
+                connection.release();
+                return next(err);
+            }
             console.log('The rows: ', rows);
             res.send(rows);
             connection.release();

@@ -13,6 +13,7 @@ var db = require("../db/DBPool"),
                     }
                     con.query("Select * From `organizer` Where ?", {api_key: apiKey}, function(dbError, results, fields){
                         if(dbError){
+                            connection.release();
                             rej(dbError);
                             return;
                         }
@@ -24,6 +25,7 @@ var db = require("../db/DBPool"),
                         }else{
                             rej("Login")
                         }
+                        connection.release();
                     })
                 });
             });

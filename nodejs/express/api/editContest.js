@@ -12,6 +12,7 @@ module.exports = function (req, res, next) {
         if (error) return next(error);
 
         if (!Auth.loggedIn) {
+            connection.release();
             return next("Login");
         }
         //TODO:add checks
@@ -38,7 +39,10 @@ module.exports = function (req, res, next) {
                 contest.id,
                 Auth.user.id
             ], function (err, result) {
-                if (err) return next(err);
+                if (err) {
+                    connection.release();
+                    return next(err);
+                }
                 console.log('Update result: ', result);
                 res.send({error: false, rowsAffected: result.affectedRows});
                 connection.release();
