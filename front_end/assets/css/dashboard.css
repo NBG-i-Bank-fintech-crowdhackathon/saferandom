@@ -72,6 +72,10 @@
     cursor: pointer;
 }
 
+.contesttab.disabled{
+	opacity: 0.5;
+}
+
 .contesttab:last-child{
 	margin-bottom:6em;
 }

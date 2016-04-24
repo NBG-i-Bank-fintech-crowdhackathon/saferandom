@@ -21,7 +21,7 @@ import {Subject, BehaviorSubject, Observable} from "rxjs/Rx";
                        </div>
                        <div class="contestslist">
                          <div *ngIf="contestsArray.length>0">
-                           <div class="contesttab" (click)="editContest(contest)" *ngFor="#contest of contestsArray">
+                           <div [ngClass]="{disabled: contest.state >= 2 }" class="contesttab" (click)="editContest(contest)" *ngFor="#contest of contestsArray">
                              <h2>#{{contest.id}} - {{contest.title}}</h2>
                              <h3>State: </h3>{{contest.getStateTitle()}}
                              <br/>
@@ -181,16 +181,18 @@ export class DashboardCmp implements OnInit, AfterViewInit {
   }
 
   private editContest(contest: Contest): void{
-    this.contestForEdit = contest;
-    this.mViewState = 2;
-
-    this
-    .mReqService
-    .getContestDetails(contest.id)
-    .subscribe((contest: Contest) => {
+    if (contest.state < 1) {
       this.contestForEdit = contest;
       this.mViewState = 2;
-    });
+
+      this
+        .mReqService
+        .getContestDetails(contest.id)
+        .subscribe((contest: Contest) => {
+          this.contestForEdit = contest;
+          this.mViewState = 2;
+        });
+    }
   }
 
   private closeEditPopup(): void{
@@ -286,6 +288,14 @@ export class DashboardCmp implements OnInit, AfterViewInit {
       .subscribe( (result: Object) =>{
           if(!result.error){
               this.closeEditPopup();
+
+              let contestsObs: Observable<Conte st[]> = this.mReqService.getContests();
+              contestsObs.subscribe((contests: Contest[]) => {
+               //  console.log(contests);
+                  this.contestsArray = contests;
+
+                  this.ref.detectChanges();
+              });      
           }else{
             alert('There was an error while saving the changes');
           }
