@@ -144,9 +144,9 @@ export class DashboardCmp implements OnInit, AfterViewInit {
 
     this.inputObservable
     .map((element: any) => { return element.target.value }) //map the input value
-    .filter((text: string) => { return text.length > 1 }) //search only for values more than 1 characters
+    .filter((text: string) => { return text.length >= 0 }) //search only for values more than 1 characters
     //.do( () => loadingCallback(true) )
-    .switchMap((text: string) => this.searchContests(text)) //the actual search
+    .switchMap((text: string) => this.mReqService.getContests(text)) //the actual search
     .subscribe(
       (response) => { this.showSearchResults(response) }, //success
       (error) => { console.log(error); });  //error
@@ -167,12 +167,11 @@ export class DashboardCmp implements OnInit, AfterViewInit {
   }
 
 
-  private searchContests(title: string){
+  private showSearchResults(contests: Contest[]):void{
+      console.log(contests);
+        this.contestsArray = contests;
 
-  } 
-
-  private showSearchResults():void{
-
+        this.ref.detectChanges();
   }
 
   private showCreateContestPopup():void{
