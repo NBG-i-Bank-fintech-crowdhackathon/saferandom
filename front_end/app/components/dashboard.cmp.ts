@@ -27,7 +27,7 @@ import {Subject, BehaviorSubject, Observable} from "rxjs/Rx";
                              <br/>
                              <h3>Method: </h3>{{contest.getMethodTitle()}}
                              <br/>
-                             <h3>Contest date: </h3>{{contest.date}}
+                             <h3>Contest date: </h3>{{contest.getDate()}}
                            </div>
                           </div>
                           <div *ngIf="contestsArray.length==0">
@@ -37,7 +37,7 @@ import {Subject, BehaviorSubject, Observable} from "rxjs/Rx";
                      </div>
                      <div class="controls">
                        <!--<div class="circlecontrol edit"></div>-->
-                       <div class="circlecontrol">+</div>
+                       <div class="circlecontrol" (click)="showCreateContestPopup($event)">+</div>
                      </div>
                    </div>
                </template>
@@ -45,11 +45,12 @@ import {Subject, BehaviorSubject, Observable} from "rxjs/Rx";
                    <div class="outerwrapper">
                      <div class="editcontestwrapper">
                        <h2>#{{contestForEdit.id}} - {{contestForEdit.title}}</h2>
-                        <h3>State: </h3>{{contestForEdit.getStateTitle()}}
+                        <h3 style="display: inline-block">State: </h3>{{contestForEdit.getStateTitle()}}
                         <br/>
-                        <h3>Method: </h3>{{contestForEdit.getMethodTitle()}}
+                        <h3 style="display: inline-block">Method: </h3>{{contestForEdit.getMethodTitle()}}
                         <br/>
-                        <h3>Contest date: </h3>{{contestForEdit.date}}
+                        <h3 style="display: inline-block">Contest date: </h3>{{contestForEdit.date}}
+                        <br/><br/>
                         <div class="line"></div><br/>
                         <h3>Participants:
                           <span *ngIf="!contestForEdit.participantsArray">There are no participants yet</span>
@@ -67,7 +68,32 @@ import {Subject, BehaviorSubject, Observable} from "rxjs/Rx";
                         <br/>
                         <div style="width: 100%; text-align: right">
                           <div class="editbtns clickbutton green" (click)="saveChanges(contestForEdit)">SAVE</div>
-                          <div class="editbtns clickbutton green">CANCEL</div>
+                          <div class="editbtns clickbutton green" (click)="closeEditPopup($event)">CANCEL</div>
+                        </div>
+                     </div>
+                   </div>
+               </template>
+               <template [ngSwitchWhen]="3">
+                   <div class="outerwrapper">
+                     <div class="editcontestwrapper">
+                        <h2>Enter title: <input style="font-size: 0.8em;" id="contesttitle" type="text" placeholder="contest title"/></h2>
+                        <br/>
+                        <h2 style="display:inline-block;">Method: </h2>
+                        <select id="contesttype" style="font-size: 1em;margin-left: 0.2em;">
+                          <option value="1">Bitcoin block</option>
+                          <option value="2">S&P 500 stocks</option>
+                          <option value="3">Weather Underground data</option>
+                          <option value="4">Official Flight Landing Timestamps</option>
+                        </select>
+                        <br/>
+                        <br/>
+                        <h2>Contest date: <input style="font-size: 0.8em;" id="contestendtime" type="date"/></h2>
+                        <br/>
+                        <div class="line"></div><br/>
+                        <br/>
+                        <div style="width: 100%; text-align: right">
+                          <div class="editbtns clickbutton green" (click)="createAContest($event)">SAVE</div>
+                          <div class="editbtns clickbutton green" (click)="closeEditPopup($event)">CANCEL</div>
                         </div>
                      </div>
                    </div>
@@ -81,6 +107,7 @@ import {Subject, BehaviorSubject, Observable} from "rxjs/Rx";
 })
 
 export class DashboardCmp implements OnInit, AfterViewInit {
+  private CONTESTTYPES: Array<Object> = Contest.types;
   private showRegisterPopup: boolean = true;
   private mViewState: number = 1;
   private selectedPlan: string;
@@ -112,7 +139,7 @@ export class DashboardCmp implements OnInit, AfterViewInit {
     $(".controls").css("left", `${left}px`).css("bottom", `${bottom + 10}px`);
 
 
-    /*
+    
     this.inputObservable = <BehaviorSubject<Contest>>Observable.fromEvent($("#contestsearchinput"), "keyup");
 
     this.inputObservable
@@ -126,7 +153,7 @@ export class DashboardCmp implements OnInit, AfterViewInit {
      // () => { completeCallback(false) }); //on complete
 
     this.inputObservable.debounceTime(250);
-  */
+  
 
     //now fetch the contests
     let contestsObs: Observable<Contest[]> = this.mReqService.getContests();
@@ -148,6 +175,10 @@ export class DashboardCmp implements OnInit, AfterViewInit {
 
   }
 
+  private showCreateContestPopup():void{
+    this.mViewState = 3;
+  }
+
   private editContest(contest: Contest): void{
     this.contestForEdit = contest;
     this.mViewState = 2;
@@ -159,6 +190,20 @@ export class DashboardCmp implements OnInit, AfterViewInit {
       this.contestForEdit = contest;
       this.mViewState = 2;
     });
+  }
+
+  private closeEditPopup(): void{
+    this.contestForEdit = null;
+    this.mViewState = 1;
+
+    setTimeout(() => {
+      let left: number = $(".outerwrapper .wrapper").offset().left;
+      let bottom: number = $(".footer").outerHeight();
+
+      $(".controls").css("left", `${left}px`).css("bottom", `${bottom + 10}px`);
+    
+
+    }, 50);
   }
 
   private showParticipantsPopup(contest: Contest):void{
@@ -173,9 +218,8 @@ export class DashboardCmp implements OnInit, AfterViewInit {
       } );
     }
 
-    console.log($("#participantsTextArea"));
-   // this.participantsText = participants;
-   // $("#participantsTextArea").val(participants);
+    // this.participantsText = participants;
+    // $("#participantsTextArea").val(participants);
   }
 
 
@@ -188,11 +232,20 @@ export class DashboardCmp implements OnInit, AfterViewInit {
       //create the participants array
       let participantsArray: Array<Object> = new Array<Object>();
 
-      participantsArray = JSON.parse(JSON.stringify(`[${participantsText}]`));
+      //participantsArray = JSON.parse(JSON.stringify(`[${participantsText}]`));
+      participantsArray = JSON.parse(`[${participantsText}]`);
 
       console.log(participantsArray);
 
-      this.mReqService.saveContestParticipants(this.contestForEdit.id, participantsArray);
+      this
+      .mReqService
+      .saveContestParticipants(this.contestForEdit.id, participantsArray)
+      .subscribe((result: Object) => {
+        if (!result.error) {
+          alert("Changes successfully made!");
+          this.closeEditPopup();
+        }
+      });
     }
 
     //  console.log($("#participantsTextArea").val());
@@ -217,6 +270,21 @@ export class DashboardCmp implements OnInit, AfterViewInit {
   }
 
   private createAContest(): void {
+    let title: string = $("#contesttitle").val();
+    let ctype: number = $("#contesttype").val();
+    let endTime: number = new Date($("#contestendtime").val() ).getTime();
 
+    console.log(title,ctype,endTime);
+
+    this
+      .mReqService
+      .addNewContest(title, ctype, endTime)
+      .subscribe( (result: Object) =>{
+          if(!result.error){
+              this.closeEditPopup();
+          }else{
+            alert('There was an error while saving the changes');
+          }
+      } );
   }
 }

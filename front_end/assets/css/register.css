@@ -121,7 +121,7 @@ h3{
 	margin: 0.5em 0em 0em 0em;
 }
 
-input{
+input, select{
 	border: 2px solid #162647;
 	min-width: 13em;
 }

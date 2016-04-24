@@ -45,4 +45,8 @@ export class Contest{
 		}
 
 	}
+
+	public getDate(): string{
+		return new Date(this.date);
+	}
 }

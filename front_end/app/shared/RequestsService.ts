@@ -11,13 +11,14 @@ import 'rxjs/add/operator/filter';
 @Injectable()
 export class RequestsService {
 	private static ip: string = "http://127.0.0.1:8081";
+	private static APIKEY: string = "32e17e3b85e2f5db814d583e201c6f4f";
 
 	constructor(private http: Http){}
 
 	
 	public getContests(): Observable<Contest[]>{
 
-		let body = JSON.stringify({api_key: "32e17e3b85e2f5db814d583e201c6f4f",
+		let body = JSON.stringify({api_key: RequestsService.APIKEY,
 								   mine: true });
 
     	let headers = new Headers({ 'Content-Type': 'application/json' });
@@ -54,8 +55,9 @@ export class RequestsService {
 	}
 
 
-	public saveContestParticipants(id: number, arrayOfParticipants: Array<Object>): Observable<boolean>{
-		let body = JSON.stringify({ cid : id,
+	public saveContestParticipants(id: number, arrayOfParticipants: Array<Object>): Observable<Object>{
+		let body = JSON.stringify({ api_key: RequestsService.APIKEY,
+									cid : id,
 									participations: arrayOfParticipants});
 
 	   	let headers = new Headers({ 'Content-Type': 'application/json' });
@@ -70,13 +72,32 @@ export class RequestsService {
 	}
 
 
+	public addNewContest(title: string, type: number, endTime: number): Observable<Object> {
+		let body = JSON.stringify({ api_key: RequestsService.APIKEY,
+									title : title,
+									type: type,
+									endTime: endTime});
+
+		let headers = new Headers({ 'Content-Type': 'application/json' });
+		let options = new RequestOptions({ headers: headers }); 
+		
+		  console.log(body);
+
+		return this.
+				http.
+				post(RequestsService.ip + "/api/addContest", body, options).
+				map(this.extractData)
+				.catch(this.handleError);	
+	}
+
+
 	public searchContest(title: string): Observable<Contest[]>{
 
 	}
 
 	 private handleError (error: any) {
 	    // In a real world app, we might send the error to remote logging infrastructure
-		  let errMsg = error.message || 'Server error';
+		let errMsg = error.message || 'Server error';
 		console.error(errMsg); // log to console instead
 		return Observable.throw(errMsg);
 	  }
