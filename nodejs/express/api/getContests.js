@@ -11,16 +11,14 @@ module.exports = function(req, res, next){
         if (onlyMine && !Auth.loggedIn) {
             return next("Login");
         }
-        var query = 'SELECT * FROM `contest`\n',
-            params = [],
-            whereAdded = false;
+        var query = 'SELECT c.*, o.`name` organizer_name FROM `contest` c, `organizer` o Where c.`organizer_id` = o.`id`\n',
+            params = [];
         if(onlyMine){
-            query+= "Where organizer_id = ?";
+            query+= "And `organizer_id` = ?";
             params.push(Auth.user.id);
-            whereAdded = true;
         }
         if(searchTitle != null){
-            query += (whereAdded ? " And" : "Where") + " title Like ?";
+            query += " And title Like ?";
             params.push(searchTitle + "%");
         }
         console.log(query, params);

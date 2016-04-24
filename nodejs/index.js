@@ -29,6 +29,8 @@ app.post("/api/*", function(req, res, next){
 //register api calls.
 app.post("/api/getContests", require("./express/api/getContests"));
 app.post("/api/getContestDetails", require("./express/api/getContestDetails"));
+app.post("/api/addContest", require("./express/api/addContest"));
+app.post("/api/editContest", require("./express/api/editContest"));
 
 
 //register angular server
