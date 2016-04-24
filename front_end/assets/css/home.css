@@ -79,7 +79,9 @@
 
 @media only screen 
   and (max-width: 530px) {
-
+.home-cmp .wrapper .bottom{
+	bottom: 3em;
+}
   .home-cmp .left{
   	width: 100%;
   	height: 100%;
