@@ -100,6 +100,21 @@
 	margin-top: 1em;
 }
 
+.ordercompleted{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	text-align: center;
+	transform: translateX(-50%) translateY(-50%);
+	-moz-transform: translateX(-50%) translateY(-50%);
+	-webkit-transform: translateX(-50%) translateY(-50%);
+}
+
+.ordercompleted .clickbutton{
+	font-weight: bold;
+	color: #FFF;
+}
+
 
 h3{
 	color: #162647;

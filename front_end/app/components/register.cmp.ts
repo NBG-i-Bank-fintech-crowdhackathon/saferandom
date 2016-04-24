@@ -69,6 +69,12 @@ import {HeaderCmp} from './srheader.cmp';
                      <h2>Create your account</h2>
                      <div class="state position3"></div>
                      <div class="line"></div>
+                     <div class="ordercompleted">
+                       <h1>Your order has been completed<br/>
+                           Now let’s create some <span style="color:#679239">safe</span> contests :-)</h1>
+                       <br/>
+                       <div class="clickbutton green" (click)="createAContest($event)">CREATE A CONTEST</div>
+                      </div>
                   </div>
                </template>
                <div class="footer" style="width:100%; position: absolute; bottom: 0;background-color:#cacaca; padding: 1.2em 0em; color: #949494;text-align:center;">Powered by BigDataNauts</div>
@@ -90,21 +96,6 @@ export class RegisterCmp implements OnInit {
   }
 
   ngOnInit() {
-    let windowHeight = $(window).outerHeight();
-    let logoHeight = $(".wrapper .top").outerHeight();
-
-    $(window).scroll(function(event) {
-      let scrollpos = $(this).scrollTop();
-
-      //console.log(`${scrollpos + logoHeight/2}`);
-
-      if (scrollpos + logoHeight / 2 > windowHeight) {
-        $(".wrapper .top").addClass("back");
-      } else {
-        $(".wrapper .top").removeClass("back");
-      }
-      //console.log(`${scrollpos}`);
-    });
 
   }
 
@@ -124,5 +115,10 @@ export class RegisterCmp implements OnInit {
 
   private showSignup(): void {
     this.mViewState = 2; //show the 1st step of the sign up
+  }
+
+  private createAContest(): void {
+    this.showView("Dashboard");
+    
   }
 }

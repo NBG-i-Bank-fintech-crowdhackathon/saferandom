@@ -6,6 +6,7 @@ import {Router, RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
 import {Type} from "angular2/core";
 import {HomeCmp} from './home.cmp';
 import {RegisterCmp} from './register.cmp';
+import {DashboardCmp} from './dashboard.cmp';
 
 @Component({
     selector: 'sr-app',
@@ -19,7 +20,8 @@ import {RegisterCmp} from './register.cmp';
 @RouteConfig([
     { path: "/home", name: "Home", component: <Type>HomeCmp, useAsDefault: true },
     { path: "/register", name: "Register", component: <Type>RegisterCmp },
-    {path: "/**", redirectTo: ['/Home']}
+    { path: "/dashboard", name: "Dashboard", component: <Type>DashboardCmp},
+    { path: "/**", redirectTo: ['/Home']}
 ])
 export class AppComponent implements OnInit{ 
 
