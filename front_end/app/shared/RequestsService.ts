@@ -16,10 +16,21 @@ export class RequestsService {
 	constructor(private http: Http){}
 
 	
-	public getContests(): Observable<Contest[]>{
+	public getContests(keyword?: string): Observable<Contest[]>{
+		let body;
 
-		let body = JSON.stringify({api_key: RequestsService.APIKEY,
-								   mine: true });
+		if (!keyword) {
+			body = JSON.stringify({
+				api_key: RequestsService.APIKEY,
+				mine: true
+			});
+		}else{
+			body = JSON.stringify({
+				api_key: RequestsService.APIKEY,
+				keyword: keyword,
+				mine: true
+			});
+		}
 
     	let headers = new Headers({ 'Content-Type': 'application/json' });
   		let options = new RequestOptions({ headers: headers });
@@ -90,10 +101,6 @@ export class RequestsService {
 				.catch(this.handleError);	
 	}
 
-
-	public searchContest(title: string): Observable<Contest[]>{
-
-	}
 
 	 private handleError (error: any) {
 	    // In a real world app, we might send the error to remote logging infrastructure
