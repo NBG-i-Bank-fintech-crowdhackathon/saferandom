@@ -49,6 +49,7 @@ public class Contest {
 	}
 	
 	public void setPoints() {
+		if (participants == null || participants.isEmpty()) return;
 		BigInteger numericSeed = new BigInteger(seed, 16);
 		for (Participant p: participants) {
 			BigInteger absDistance = numericSeed.subtract(new BigInteger(p.getSeed(), 16)).abs();
