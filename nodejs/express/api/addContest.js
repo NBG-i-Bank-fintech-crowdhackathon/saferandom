@@ -9,6 +9,7 @@ module.exports = function(req, res, next){
         if (error) return next(error);
 
         if (!Auth.loggedIn) {
+            connection.release();
             return next("Login");
         }
         //TODO:add checks
@@ -22,7 +23,10 @@ module.exports = function(req, res, next){
             };
         console.log("Insert contest", post, contest);
         connection.query("Insert Into `contest` Set ?", contest, function(err, result) {
-            if (err) return next(err);
+            if (err) {
+                connection.release();
+                return next(err);
+            }
             console.log('Insert result: ', result);
             if(result.affectedRows && result.insertId){
                 res.send({error:false, contestId: result.insertId});
