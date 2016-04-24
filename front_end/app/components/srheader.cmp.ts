@@ -7,6 +7,8 @@ import {Router} from 'angular2/router';
   selector: 'sr-header-cmp',
   template: `<div>
                 <img class="logo" src="/assets/img/logo.png"/><br/>
+                <span>The world’s first public verifiable random engine</span>
+
             </div>`,
   host: {
 	   class: 'sr-header-cmp'
